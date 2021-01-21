@@ -1,6 +1,9 @@
-from django.urls import path
-from rooms import views
+from rest_framework.routers import DefaultRouter
+from . import viewsets
 
 app_name = "rooms"
 
-urlpatterns = [path("list/", views.ListRoomView.as_view())]
+router = DefaultRouter()
+router.register("", viewsets.RoomViewSet, basename="room")
+
+urlpatterns = router.urls
