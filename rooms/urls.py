@@ -3,4 +3,4 @@ from rooms import views
 
 app_name = "rooms"
 
-urlpatterns = [path("list/", views.list_rooms)]
+urlpatterns = [path("list/", views.ListRoomView.as_view())]
