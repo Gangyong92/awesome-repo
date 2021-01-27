@@ -5,8 +5,8 @@ from .models import Room
 
 class RoomSerializer(serializers.ModelSerializer):
 
-    user = RelatedUserSerializer()
-    am_i_sexy = serializers.SerializerMethodField()
+    user = RelatedUserSerializer(read_only=True)
+    is_favs = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
@@ -29,10 +29,15 @@ class RoomSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Not enough time between changes")
         return data
 
-    def get_am_i_sexy(self, obj):
+    def get_is_favs(self, obj):
         request = self.context.get("request")
         if request:
             user = request.user
             if user.is_authenticated:
                 return obj in user.favs.all()
         return False
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        room = Room.objects.create(**validated_data, user=request.user)
+        return room
